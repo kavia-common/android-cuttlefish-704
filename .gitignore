@@ -1,27 +1,63 @@
-.*
-*.o
-*.buildinfo
-*.build
-*.changes
-*.deb
-*.dsc
-*.pyc
-*.lock
 
-cuttlefish-*_*.*.*.tar.xz
+# Python ignorables
+logs/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-!/.github/
-!/.kokoro/
-!/.clang-format
+pip-log.txt
+pip-delete-this-directory.txt
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+venv/
+.env
+.env.*
 
-/*/debian/cuttlefish-*/
-/*/debian/*.substvars
-/*/debian/files
-/*/debian/*.debhelper
-/*/debian/debhelper-build-stamp
-/*/debian/*.log
+# Ignore all directories containing pyvenv.cfg
+**/pyvenv.cfg
+**/*/pyvenv.cfg
 
-frontend/src/operator/webui/src/environments/version.ts
-
-/bazel-*
-/**/bazel-*
+# Node.js ignorables
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp/
+.pnp.js
+.env
+.env.test
+.cache/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+.file_activity_report.json
+*.db
+core.*
+.core
+*.log
+post_process_status.lock
