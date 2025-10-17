@@ -1,0 +1,29 @@
+sequenceDiagram
+  participant Host as Host/QEMU
+  participant BL as Bootloader
+  participant K as Kernel
+  participant VC as VController
+  participant V1 as VComponent#1 (VHI)
+  participant V2 as VComponent#2 (VHI)
+
+  Host->>BL: Power on VM
+  BL->>K: Load kernel + initramfs
+  BL->>K: Pass cmdline (hfp=/etc/vdevice/hfp.yaml)
+  K-->>VC: Start userland services
+  VC->>VC: Read & parse HFP YAML (profiles, components, params)
+  VC->>V1: Init over ut-control (WebSocket connect)
+  VC->>V2: Init over ut-control (WebSocket connect)
+  V1-->>VC: Init ACK + capabilities
+  V2-->>VC: Init ACK + capabilities
+  VC->>V1: Configure component (per HFP)
+  VC->>V2: Configure component (per HFP)
+  V1-->>VC: Config OK / status
+  V2-->>VC: Config OK / status
+  note over VC,V1: Control loop: start/stop, set params, inject events
+  VC->>V1: Start
+  V1-->>VC: Started
+  VC->>V2: Start
+  V2-->>VC: Started
+  note over V1,VC: AIDL calls serve middleware/app requests
+  V1<->>VC: Telemetry/health via ut-control
+  V2<->>VC: Telemetry/health via ut-control

@@ -1,0 +1,29 @@
+flowchart LR
+  subgraph Host
+    Q[QEMU/KVM]
+  end
+  subgraph VM[vDevice Image]
+    BOOT[Bootloader]
+    KRN[Linux Kernel]
+    USR[Userland]
+    subgraph C[VController]
+      P[HFP YAML Parser]
+      O[Control Orchestrator]
+      WSC[ut-control WS Client]
+    end
+    subgraph VHI[VHI Layer]
+      VC1[VComponent: AIDL + HW Sim + WS Server]
+      VC2[VComponent: AIDL + HW Sim + WS Server]
+    end
+  end
+
+  Q --> BOOT
+  BOOT -->|cmdline: hfp=<path>| KRN
+  KRN --> USR
+  USR --> C
+  P --> O
+  O <--> WSC
+  WSC <--> VC1
+  WSC <--> VC2
+  VC1 <-->|AIDL IPC| USR
+  VC2 <-->|AIDL IPC| USR

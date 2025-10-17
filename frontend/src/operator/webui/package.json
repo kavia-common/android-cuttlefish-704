@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "gts lint",
     "clean": "gts clean",
-    "fix": "gts fix"
+    "fix": "gts fix",
+    "diagrams:build": "mmdc -i docs/diagrams/block-diagram.mmd -o docs/diagrams/block-diagram.svg && mmdc -i docs/diagrams/sequence-diagram.mmd -o docs/diagrams/sequence-diagram.svg && mmdc -i docs/diagrams/block-diagram.mmd -o docs/diagrams/block-diagram.png && mmdc -i docs/diagrams/sequence-diagram.mmd -o docs/diagrams/sequence-diagram.png"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +42,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~4.9.5"
+    "typescript": "~4.9.5",
+    "@mermaid-js/mermaid-cli": "^10.9.0"
   }
 }
