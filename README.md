@@ -53,3 +53,10 @@ to obtain the script.
 
 Please read [docker/README.md](docker/README.md) to know how to use docker image
 containing Cuttlefish debian packages.
+
+## Architecture Documentation
+
+New VDevice design docs and diagrams are available:
+
+- Architecture overview: [docs/architecture/vdevice-architecture.md](docs/architecture/vdevice-architecture.md)
+- Architecture docs index: [docs/architecture/README.md](docs/architecture/README.md)

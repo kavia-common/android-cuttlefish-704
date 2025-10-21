@@ -1,0 +1,45 @@
+%% Mermaid source: Block Diagram for new VDevice
+flowchart TB
+  subgraph UI[Web UI (optional)]
+  end
+
+  subgraph VC[VController (Control Plane)]
+    VC_PARSE[Parse HFP YAML\nBuild VHI topology\nManage VComponents]
+    VC_WS[ut-control Message Router (WebSocket)]
+  end
+
+  subgraph VHI[VHI (Virtual Hardware Interface)]
+    VHI_REG[AIDL Service Registry\nComponent Contracts]
+  end
+
+  subgraph VCOMP[VComponents Layer]
+    VCMP1[Display Component\n(AIDL + WebRTC/SDL/OpenGL)]
+    VCMP2[Audio Component\n(AIDL + PulseAudio/PortAudio)]
+    VCMP3[Sensors Component\n(AIDL + IMU/GPS libs)]
+    VCMP4[Storage Component\n(AIDL + qcow2 helpers)]
+    VCMP5[Network Component\n(AIDL + TAP/TUN/virtio-net)]
+  end
+
+  subgraph GUEST[Guest Execution (QEMU domain)]
+    QEMU[QEMU]
+    BOOT[Bootloader]
+    KERNEL[Kernel/Init]
+  end
+
+  subgraph YAML[HFP YAML Source / Channel]
+    YSRC[HFP YAML file/ref\n(vsock/fw_cfg/shared fs)]
+  end
+
+  UI -->|REST/WebSocket control| VC
+  QEMU --> BOOT --> KERNEL
+  BOOT -->|cmdline contains HFP YAML ref| KERNEL
+  YSRC -->|provide HFP YAML| VC
+  VC --> VC_PARSE
+  VC --> VC_WS
+  VC_PARSE --> VHI
+  VHI --> VHI_REG
+  VC_WS <-->|ut-control (WebSocket)| VCOMP
+  VHI_REG <-->|AIDL bindings| VCOMP
+
+  classDef grp fill:#f9f9f9,stroke:#bbb,rounded:6px;
+  class UI,VC,VHI,VCOMP,GUEST,YAML grp;

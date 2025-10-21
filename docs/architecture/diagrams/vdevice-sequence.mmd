@@ -1,0 +1,45 @@
+%% Mermaid source: Sequence Diagram for new VDevice
+sequenceDiagram
+  autonumber
+  participant U as User/WebUI
+  participant Q as QEMU
+  participant B as Bootloader
+  participant K as Kernel/Init
+  participant Y as YAML Channel (vsock/fw_cfg/shared fs)
+  participant C as VController
+  participant H as VHI
+  participant X as VComponent (AIDL + ut-control)
+
+  U->>Q: Start VDevice
+  Q->>B: Load & execute
+  B->>K: Boot kernel (cmdline includes HFP YAML reference)
+  K-->>Y: Expose HFP YAML for host retrieval
+
+  C->>Y: Retrieve HFP YAML
+  Y-->>C: Return YAML content
+  C->>C: Parse YAML (components, capabilities, policies)
+  C->>H: Initialize VHI graph & AIDL registry
+  C->>X: Launch component processes (per YAML)
+  X->>C: ut-control register (WebSocket handshake)
+  C->>X: Configure message (params from YAML)
+  X->>H: Bind AIDL service implementation
+  H-->>C: Registry confirms bindings
+
+  rect rgb(240,240,255)
+  U->>C: Control request (e.g., EnableSensor gyro)
+  C->>X: ut-control { action: enable, component: sensor.gyro }
+  X->>X: Apply via simulation lib
+  X-->>C: Ack/Status
+  C-->>U: Status update
+  end
+
+  rect rgb(240,255,240)
+  X-->>H: AIDL callback: sensor event
+  H-->>C: Optional route/notify
+  C-->>U: Telemetry/metrics (optional)
+  end
+
+  U->>C: Stop device
+  C->>X: ut-control { action: shutdown }
+  X-->>C: Ack & deregister
+  C->>Q: Poweroff/quit
